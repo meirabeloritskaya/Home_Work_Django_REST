@@ -13,10 +13,14 @@ from materials.serializers import (
     LessonSerializer,
     CourseDetailSerializer,
 )
+from django_filters.rest_framework import DjangoFilterBackend
+from materials.filters import CourseFilter, LessonFilter
 
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = CourseFilter
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -32,6 +36,8 @@ class LessonCreateAPIView(CreateAPIView):
 class LessonListAPIView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = LessonFilter
 
 
 class LessonRetrieveAPIView(RetrieveAPIView):

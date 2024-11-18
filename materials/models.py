@@ -21,6 +21,10 @@ class Course(models.Model):
         null=True,
     )
 
+    def is_paid(self):
+        # Проверяем, оплачены ли все уроки
+        return all(lesson.payment_date is not None for lesson in self.lessons.all())
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
@@ -53,6 +57,21 @@ class Lesson(models.Model):
         help_text="Введите ссылку на видеоурок",
         blank=True,
         null=True,
+    )
+
+    payment_date = models.DateTimeField(
+        verbose_name="Дата оплаты",
+        help_text="Дата, когда был произведен платеж",
+        null=True,
+        blank=True,
+    )
+    payment_method = models.CharField(
+        max_length=50,
+        choices=[("cash", "Наличные"), ("transfer", "Перевод")],
+        verbose_name="Способ оплаты",
+        help_text="Выберите способ оплаты",
+        null=True,
+        blank=True,
     )
 
     course = models.ForeignKey(
