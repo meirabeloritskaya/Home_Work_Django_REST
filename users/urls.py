@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet, PaymentViewSet
+from .views import UserCreateAPIView, PaymentViewSet, UserViewSet
 from users.apps import UsersConfig
 from .views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import (
@@ -17,7 +17,6 @@ router.register(r"payments", PaymentViewSet, basename="payments")
 
 urlpatterns = [
     path("", include(router.urls)),
-    # path('login/', TokenObtainPairView.as_view(), name='login'),
     path(
         "token/refresh/",
         TokenRefreshView.as_view(permission_classes=(AllowAny,)),
@@ -28,5 +27,5 @@ urlpatterns = [
         MyTokenObtainPairView.as_view(permission_classes=(AllowAny,)),
         name="login",
     ),
-    path("register/", UserViewSet.as_view({"post": "create"}), name="register"),
+    path("register/", UserCreateAPIView.as_view(), name="register"),
 ]

@@ -15,6 +15,7 @@ from materials.serializers import (
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from materials.filters import CourseFilter, LessonFilter
+from users.permissions import IsModer
 
 
 class CourseViewSet(ModelViewSet):
@@ -26,6 +27,13 @@ class CourseViewSet(ModelViewSet):
         if self.action == "retrieve":
             return CourseDetailSerializer
         return CourseSerializer
+
+    def get_permissions(self):
+        if self.action in ["create", "destroy"]:
+            self.permission_classes = [~IsModer]
+        elif self.action in ["update", "retrieve", "list"]:
+            self.permission_classes = [IsModer]
+            return super().get_permissions()
 
 
 class LessonCreateAPIView(CreateAPIView):
