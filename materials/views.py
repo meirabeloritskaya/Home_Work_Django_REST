@@ -38,15 +38,13 @@ class CourseViewSet(ModelViewSet):
         elif self.action in ["destroy"]:
             self.permission_classes = [IsAuthenticated & IsOwner]
 
-        elif self.action in ["update", "retrieve", "list"]:
-
-            if self.action == "list":
-
-                if not self.request.user.groups.filter(name="moders").exists():
-                    self.queryset = self.queryset.filter(owner=self.request.user)
-
+        elif self.action in ["update"]:
             self.permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
 
+        elif self.action in ["list"]:
+            if not self.request.user.groups.filter(name="moders").exists():
+                self.queryset = self.queryset.filter(owner=self.request.user)
+            self.permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
         return super().get_permissions()
 
 
