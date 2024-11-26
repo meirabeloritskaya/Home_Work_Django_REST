@@ -63,51 +63,58 @@ class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = LessonFilter
-    # permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
-    #
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     if self.request.user.groups.filter(name="moders").exists():
-    #         # Модераторы видят все уроки
-    #         return queryset
-    #     # Обычные пользователи видят только свои уроки
-    #     return queryset.filter(course__owner=self.request.user)
+    permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+
+        if not user.groups.filter(name="moders").exists():
+            queryset = queryset.filter(course__owner=user)
+
+        return queryset
 
 
 class LessonRetrieveAPIView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    # permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
-    #
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     if not self.request.user.groups.filter(name="moders").exists():
-    #         # Если это не модератор, показываем только уроки, принадлежащие пользователю
-    #         queryset = queryset.filter(course__owner=self.request.user)
-    #     return queryset
+    permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+
+        if not user.groups.filter(name="moders").exists():
+            queryset = queryset.filter(course__owner=user)
+
+        return queryset
 
 
 class LessonUpdateAPIView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    # permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
-    #
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     if not self.request.user.groups.filter(name="moders").exists():
-    #         # Если это не модератор, показываем только уроки, принадлежащие пользователю
-    #         queryset = queryset.filter(course__owner=self.request.user)
-    #     return queryset
+    permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+
+        if not user.groups.filter(name="moders").exists():
+            queryset = queryset.filter(course__owner=user)
+
+        return queryset
 
 
 class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    # permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
+    permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     if not self.request.user.groups.filter(name="moders").exists():
-    #         # Если это не модератор, показываем только уроки, принадлежащие пользователю
-    #         queryset = queryset.filter(course__owner=self.request.user)
-    #     return queryset
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+
+        if not user.groups.filter(name="moders").exists():
+            queryset = queryset.filter(course__owner=user)
+
+        return queryset

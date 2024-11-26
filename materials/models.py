@@ -22,7 +22,12 @@ class Course(models.Model):
         blank=True,
         null=True,
     )
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='courses', on_delete=models.CASCADE, null=True,)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="courses",
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
     def is_paid(self):
         # Проверяем, оплачены ли все уроки
@@ -84,7 +89,12 @@ class Lesson(models.Model):
         verbose_name="Курс",
         help_text="Выберите курс, к которому относится этот урок",
     )
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='lessons', on_delete=models.CASCADE, null=True,)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="lessons",
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
     def __str__(self):
         return self.title
