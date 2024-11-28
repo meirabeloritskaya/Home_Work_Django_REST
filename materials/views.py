@@ -106,13 +106,11 @@ class LessonUpdateAPIView(UpdateAPIView):
 class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
+    permission_classes = [IsAuthenticated & IsOwner]
 
     def get_queryset(self):
         queryset = super().get_queryset()
         user = self.request.user
-
-        if not user.groups.filter(name="moders").exists():
-            queryset = queryset.filter(course__owner=user)
+        queryset = queryset.filter(course__owner=user)
 
         return queryset
