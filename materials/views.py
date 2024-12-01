@@ -8,6 +8,7 @@ from rest_framework.generics import (
     RetrieveAPIView,
     UpdateAPIView,
 )
+from materials.paginators import CustomPagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -28,6 +29,7 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CourseFilter
+    pagination_class = CustomPagination
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -62,6 +64,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = LessonFilter
     permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
@@ -124,12 +127,16 @@ class SubscriptionAPIView(APIView):
         user = request.user
         course_id = request.data.get("course_id")
         if not course_id:
-            return Response({"detail": "Не указан курс"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Не указан курс"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         course = get_object_or_404(Course, id=course_id)
 
         # Проверяем, есть ли уже подписка
-        subscription, created = Subscription.objects.get_or_create(user=user, course=course)
+        subscription, created = Subscription.objects.get_or_create(
+            user=user, course=course
+        )
 
         if not created:
             # Если подписка существует, удаляем её
