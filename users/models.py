@@ -26,18 +26,23 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+
 # Кастомная модель пользователя
 class User(AbstractUser):
     username = None  # Убираем поле username
-    email = models.EmailField(unique=True)  # Поле для email, которое будет использовано для аутентификации
+    email = models.EmailField(
+        unique=True
+    )  # Поле для email, которое будет использовано для аутентификации
 
     # Другие поля, такие как телефон, аватар и т.д.
     phone = models.CharField(max_length=35, blank=True, null=True)
     tg_nick = models.CharField(max_length=50, blank=True, null=True)
     avatar = models.ImageField(upload_to="users/avatars", blank=True, null=True)
 
-    USERNAME_FIELD = 'email'  # Указываем, что для аутентификации используется email
-    REQUIRED_FIELDS = []  # Оставляем пустым, так как email — это основное поле для аутентификации
+    USERNAME_FIELD = "email"  # Указываем, что для аутентификации используется email
+    REQUIRED_FIELDS = (
+        []
+    )  # Оставляем пустым, так как email — это основное поле для аутентификации
 
     objects = CustomUserManager()  # Подключаем кастомный менеджер
 

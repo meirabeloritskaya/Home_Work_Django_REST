@@ -16,4 +16,6 @@ class UserTests(APITestCase):
         }
         response = self.client.post("/users/register/", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(get_user_model().objects.filter(email="newuser@example.com").exists())
+        self.assertTrue(
+            get_user_model().objects.filter(email="newuser@example.com").exists()
+        )
