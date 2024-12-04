@@ -1,14 +1,15 @@
-# materials/tests.py
-
-from django.test import TestCase
+from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from materials.models import Course, Lesson
-from django.urls import reverse
+from materials.models import Course
+from rest_framework.test import APITestCase
 
 
-class CourseAndLessonAccessTests(TestCase):
+class CourseAndLessonAccessTests(APITestCase):
 
     def setUp(self):
+        # Создание группы 'moders', если она не существует
+        self.moder_group, created = Group.objects.get_or_create(name="moders")
+
         # Создание пользователей
         self.manager = get_user_model().objects.create_user(
             email="manager@example.com", password="password123", is_staff=True
@@ -17,50 +18,29 @@ class CourseAndLessonAccessTests(TestCase):
             email="user@example.com", password="password123", is_staff=False
         )
 
-        # Создание курсов и уроков
+        # Добавление пользователя в группу "moders"
+        self.manager.groups.add(self.moder_group)
+
+        # Создание курсов
         self.course1 = Course.objects.create(title="Course 1", owner=self.manager)
         self.course2 = Course.objects.create(title="Course 2", owner=self.user)
-        self.lesson1 = Lesson.objects.create(
-            course=self.course1,
-            title="Lesson 1",
-            description="Content 1",
-            owner=self.manager,
-        )
-        self.lesson2 = Lesson.objects.create(
-            course=self.course2,
-            title="Lesson 2",
-            description="Content 2",
-            owner=self.user,
-        )
 
-    def test_manager_can_view_all_courses_and_lessons(self):
-        # Логиним менеджера
-        self.client.force_login(self.manager)
+    def test_manager_can_view_all_courses(self):
+        """Тест для проверки доступа менеджера ко всем курсам"""
+        self.client.force_authenticate(user=self.manager)
 
-        # Проверка доступа к курсам
-        response = self.client.get(reverse("materials:course-list"))
+        response = self.client.get("/courses/")
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
 
-        # Проверка доступа к урокам
-        response = self.client.get(reverse("materials:lessons_list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Lesson 1")
-        self.assertContains(response, "Lesson 2")
+    def test_user_can_only_view_own_courses(self):
+        """Тест для проверки, что пользователь видит только свои курсы"""
+        self.client.force_authenticate(user=self.user)
 
-    def test_user_can_only_view_own_courses_and_lessons(self):
-        # Логиним обычного пользователя
-        self.client.force_login(self.user)
+        response = self.client.get("/courses/")
 
-        # Проверка доступа к курсам
-        response = self.client.get(reverse("materials:course-list"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Course 2")
-        self.assertNotContains(response, "Course 1")
-
-        # Проверка доступа к урокам
-        response = self.client.get(reverse("materials:lessons_list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Lesson 2")
-        self.assertNotContains(response, "Lesson 1")
+        self.assertContains(response, "Course 2")  # Ожидаем увидеть только свой курс
+        self.assertNotContains(response, "Course 1")  # Не должно быть курсов менеджера

@@ -47,10 +47,16 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
 
         elif self.action in ["list"]:
-            if not self.request.user.groups.filter(name="moders").exists():
-                self.queryset = self.queryset.filter(owner=self.request.user)
             self.permission_classes = [IsAuthenticated & (IsOwner | IsModer)]
         return super().get_permissions()
+
+    def get_queryset(self):
+        # Для менеджеров возвращаем все курсы
+        if self.request.user.groups.filter(name="moders").exists():
+            return Course.objects.all().order_by("id")
+
+        # Для обычных пользователей фильтруем курсы по владельцу
+        return Course.objects.filter(owner=self.request.user)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
