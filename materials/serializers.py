@@ -41,6 +41,7 @@ class CourseDetailSerializer(ModelSerializer):
             "course_lesson_count",
             "lesson_titles",
             "is_paid",
+            "is_subscribed",
         )
 
 
