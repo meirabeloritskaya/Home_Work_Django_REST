@@ -22,6 +22,14 @@ class Course(models.Model):
         blank=True,
         null=True,
     )
+    price = models.DecimalField(  # Добавляем поле для цены
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Цена курса",
+        help_text="Введите цену курса",
+        blank=True,
+        null=True,
+    )
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="courses",

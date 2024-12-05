@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
     # TokenObtainPairView,
     TokenRefreshView,
 )
+from .views import CreatePaymentView
 from rest_framework.permissions import AllowAny
 
 app_name = UsersConfig.name
@@ -28,4 +29,5 @@ urlpatterns = [
         name="login",
     ),
     path("register/", UserCreateAPIView.as_view(), name="register"),
+    path("create-payment/", CreatePaymentView.as_view(), name="create-payment"),
 ]

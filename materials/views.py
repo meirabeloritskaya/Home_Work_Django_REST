@@ -23,6 +23,7 @@ from .serializers import SubscriptionSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from materials.filters import CourseFilter, LessonFilter
 from users.permissions import IsModer, IsOwner
+from drf_yasg.utils import swagger_auto_schema
 
 
 class CourseViewSet(ModelViewSet):
@@ -83,6 +84,11 @@ class LessonListAPIView(generics.ListAPIView):
             queryset = queryset.filter(course__owner=user)
 
         return queryset
+
+    # @swagger_auto_schema(operation_description="List lessons available for the user")
+    # def get(self, request, *args, **kwargs):
+    #
+    #     return super().get(request, *args, **kwargs)
 
 
 class LessonRetrieveAPIView(RetrieveAPIView):
