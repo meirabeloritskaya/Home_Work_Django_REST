@@ -2,9 +2,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import (
-    CreateAPIView,
     DestroyAPIView,
-    ListAPIView,
     RetrieveAPIView,
     UpdateAPIView,
 )
@@ -23,7 +21,6 @@ from .serializers import SubscriptionSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from materials.filters import CourseFilter, LessonFilter
 from users.permissions import IsModer, IsOwner
-from drf_yasg.utils import swagger_auto_schema
 
 
 class CourseViewSet(ModelViewSet):
