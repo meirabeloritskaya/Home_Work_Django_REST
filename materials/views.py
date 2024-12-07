@@ -21,6 +21,7 @@ from .serializers import SubscriptionSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from materials.filters import CourseFilter, LessonFilter
 from users.permissions import IsModer, IsOwner
+from materials.tasks import send_course_update_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -55,6 +56,16 @@ class CourseViewSet(ModelViewSet):
 
         # Для обычных пользователей фильтруем курсы по владельцу
         return Course.objects.filter(owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        course = self.get_object()
+        # Здесь вы обновляете курс с данными из запроса
+        response = super().update(request, *args, **kwargs)
+
+        # После успешного обновления вызываем задачу для рассылки
+        send_course_update_email.delay(course.id)
+
+        return response
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
