@@ -1,7 +1,8 @@
-from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from materials.models import Course
+from django.contrib.auth.models import Group
 from rest_framework.test import APITestCase
+
+from materials.models import Course
 
 
 class CourseAndLessonAccessTests(APITestCase):

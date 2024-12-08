@@ -1,8 +1,9 @@
 import os
-from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
+from pathlib import Path
+
 from celery.schedules import crontab
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -105,10 +106,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_BROKER_URL = "redis://localhost:6379"
 
 # URL-адрес брокера результатов, также Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 # Часовой пояс для работы Celery
 CELERY_TIMEZONE = "Australia/Tasmania"
@@ -120,13 +121,13 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BEAT_SCHEDULE = {
-    'send-course-update-email': {
-        'task': 'materials.tasks.send_course_update_email',  # Путь к задаче
-        'schedule': timedelta(hours=24),  # выполняется каждые 24 часа
+    "send-course-update-email": {
+        "task": "materials.tasks.send_course_update_email",
+        "schedule": timedelta(hours=24),  # выполняется каждые 24 часа
     },
-    'deactivate-inactive-users': {
-        'task': 'users.tasks.deactivate_inactive_users',
-        'schedule': crontab(minute=0, hour=0),  # Каждый день в полночь
+    "deactivate-inactive-users": {
+        "task": "users.tasks.deactivate_inactive_users",
+        "schedule": crontab(minute=0, hour=0),  # Каждый день в полночь
     },
 }
 

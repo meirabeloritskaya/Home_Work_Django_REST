@@ -1,5 +1,6 @@
-from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
+
+from django.core.exceptions import ValidationError
 
 
 class VideoURLValidator:

@@ -1,16 +1,12 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
-from .views import SubscriptionAPIView
-from .views import UserSubscriptionsView
+
 from materials.apps import MaterialsConfig
-from materials.views import (
-    CourseViewSet,
-    LessonCreateAPIView,
-    LessonDestroyAPIView,
-    LessonListAPIView,
-    LessonRetrieveAPIView,
-    LessonUpdateAPIView,
-)
+from materials.views import (CourseViewSet, LessonCreateAPIView,
+                             LessonDestroyAPIView, LessonListAPIView,
+                             LessonRetrieveAPIView, LessonUpdateAPIView)
+
+from .views import SubscriptionAPIView, UserSubscriptionsView
 
 app_name = MaterialsConfig.name
 router = SimpleRouter()

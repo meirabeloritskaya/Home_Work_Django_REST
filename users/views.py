@@ -1,27 +1,20 @@
-from django_filters import rest_framework as filters
-from rest_framework.permissions import AllowAny
-from rest_framework import viewsets
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer
-from .models import Payment
-from .serializers import PaymentSerializer
-from materials.models import Course, Lesson
-from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import MyTokenObtainPairSerializer
-from rest_framework.generics import CreateAPIView
-
 from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
+from django_filters import rest_framework as filters
+from rest_framework import status, viewsets
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
+from materials.models import Course, Lesson
 
-from .services.stripe_service import (
-    create_product,
-    create_price,
-    create_checkout_session,
-)
-
+from .models import Payment
+from .serializers import (MyTokenObtainPairSerializer, PaymentSerializer,
+                          UserSerializer)
+from .services.stripe_service import (create_checkout_session, create_price,
+                                      create_product)
 
 User = get_user_model()
 
@@ -90,4 +83,7 @@ class CreatePaymentView(APIView):
             stripe_session_id=session["id"],
         )
 
-        return Response({"payment_url": session["url"], "payment_id": payment.id}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"payment_url": session["url"], "payment_id": payment.id},
+            status=status.HTTP_201_CREATED,
+        )

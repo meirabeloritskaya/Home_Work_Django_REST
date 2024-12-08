@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+
 from materials.models import Course, Lesson
 
 User = get_user_model()

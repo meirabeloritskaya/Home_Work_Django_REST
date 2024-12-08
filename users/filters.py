@@ -1,6 +1,8 @@
 # from rest_framework import permissions
-from materials.models import Course, Lesson
 from django_filters import rest_framework as filters
+
+from materials.models import Course, Lesson
+
 from .models import Payment
 
 
