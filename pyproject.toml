@@ -22,6 +22,10 @@ chardet = "^5.2.0"
 coverage = "^7.6.8"
 drf-yasg = "^1.21.8"
 stripe = "^11.3.0"
+celery = "^5.4.0"
+django-celery-beat = "^2.7.0"
+eventlet = "^0.38.0"
+redis = "^5.2.1"
 
 
 [build-system]

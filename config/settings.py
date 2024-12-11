@@ -1,6 +1,8 @@
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -32,6 +34,9 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework_simplejwt",
     "drf_yasg",
+    "celery",
+    "django_celery_beat",
+    "config",
 ]
 
 MIDDLEWARE = [
@@ -100,6 +105,32 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = "redis://localhost:6379"
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = "Australia/Tasmania"
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    "send-course-update-email": {
+        "task": "materials.tasks.send_course_update_email",
+        "schedule": timedelta(hours=24),  # выполняется каждые 24 часа
+    },
+    "deactivate-inactive-users": {
+        "task": "users.tasks.deactivate_inactive_users",
+        "schedule": crontab(minute=0, hour=0),  # Каждый день в полночь
+    },
+}
+
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -122,3 +153,14 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

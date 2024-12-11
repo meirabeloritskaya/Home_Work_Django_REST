@@ -1,29 +1,22 @@
-from rest_framework import generics
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-)
-from materials.paginators import CustomPagination
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
-from materials.models import Course, Lesson, Subscription
-from materials.serializers import (
-    CourseSerializer,
-    LessonSerializer,
-    CourseDetailSerializer,
-)
-from .serializers import SubscriptionSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, status
+from rest_framework.generics import (DestroyAPIView, RetrieveAPIView,
+                                     UpdateAPIView)
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
 from materials.filters import CourseFilter, LessonFilter
+from materials.models import Course, Lesson, Subscription
+from materials.paginators import CustomPagination
+from materials.serializers import (CourseDetailSerializer, CourseSerializer,
+                                   LessonSerializer)
+from materials.tasks import send_course_update_email
 from users.permissions import IsModer, IsOwner
-from drf_yasg.utils import swagger_auto_schema
+
+from .serializers import SubscriptionSerializer
 
 
 class CourseViewSet(ModelViewSet):
@@ -58,6 +51,16 @@ class CourseViewSet(ModelViewSet):
 
         # Для обычных пользователей фильтруем курсы по владельцу
         return Course.objects.filter(owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        course = self.get_object()
+        # Здесь вы обновляете курс с данными из запроса
+        response = super().update(request, *args, **kwargs)
+
+        # После успешного обновления вызываем задачу для рассылки
+        send_course_update_email.delay(course.id)
+
+        return response
 
 
 class LessonCreateAPIView(generics.CreateAPIView):

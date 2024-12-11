@@ -1,7 +1,9 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from .validators import VideoURLValidator
-from materials.models import Course, Lesson, Subscription
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
+
+from materials.models import Course, Lesson, Subscription
+
+from .validators import VideoURLValidator
 
 
 class CourseSerializer(ModelSerializer):
