@@ -40,7 +40,6 @@ docker-compose exec app poetry run python manage.py runserver 0.0.0.0:8000
 ```
 docker-compose exec celery poetry run celery -A config worker --loglevel=info
 ```
-
 7. Для запуска Celery Beat (для планирования задач):
 ```
 docker-compose exec celery-beat poetry run celery -A config beat --loglevel=info
