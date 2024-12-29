@@ -11,10 +11,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from materials.models import Course, Lesson
 
 from .models import Payment
-from .serializers import (MyTokenObtainPairSerializer, PaymentSerializer,
-                          UserSerializer)
-from .services.stripe_service import (create_checkout_session, create_price,
-                                      create_product)
+from .serializers import MyTokenObtainPairSerializer, PaymentSerializer, UserSerializer
+from .services.stripe_service import (
+    create_checkout_session,
+    create_price,
+    create_product,
+)
 
 User = get_user_model()
 

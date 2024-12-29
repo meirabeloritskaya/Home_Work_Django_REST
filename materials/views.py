@@ -1,8 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
-from rest_framework.generics import (DestroyAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import DestroyAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,8 +10,11 @@ from rest_framework.viewsets import ModelViewSet
 from materials.filters import CourseFilter, LessonFilter
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CustomPagination
-from materials.serializers import (CourseDetailSerializer, CourseSerializer,
-                                   LessonSerializer)
+from materials.serializers import (
+    CourseDetailSerializer,
+    CourseSerializer,
+    LessonSerializer,
+)
 from materials.tasks import send_course_update_email
 from users.permissions import IsModer, IsOwner
 
