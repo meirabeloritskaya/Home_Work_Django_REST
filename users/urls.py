@@ -1,13 +1,17 @@
 from django.urls import include, path
 from rest_framework.permissions import AllowAny
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import \
-    TokenRefreshView  # TokenObtainPairView,
+from rest_framework_simplejwt.views import TokenRefreshView  # TokenObtainPairView,
 
 from users.apps import UsersConfig
 
-from .views import (CreatePaymentView, MyTokenObtainPairView, PaymentViewSet,
-                    UserCreateAPIView, UserViewSet)
+from .views import (
+    CreatePaymentView,
+    MyTokenObtainPairView,
+    PaymentViewSet,
+    UserCreateAPIView,
+    UserViewSet,
+)
 
 app_name = UsersConfig.name
 
