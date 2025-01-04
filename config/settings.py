@@ -79,14 +79,11 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600
-    )
-}
-
-if not DATABASES["default"]:
+if os.getenv('DJANGO_ENV') == 'production':  # Продакшн-режим (Render)
+    DATABASES = {
+        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    }
+else:  # Локальный режим (Docker)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
