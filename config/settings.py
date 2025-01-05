@@ -1,11 +1,12 @@
 import os
+import dj_database_url
+
 from datetime import timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
-import dj_database_url
 
 load_dotenv()
 
@@ -167,7 +168,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
 
 
 SERVER_EMAIL = EMAIL_HOST_USER
