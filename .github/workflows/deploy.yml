@@ -34,6 +34,9 @@ jobs:
         run: |
           poetry run python manage.py test
         continue-on-error: false
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
 
       - name: Deploy to Render
         if: success()
