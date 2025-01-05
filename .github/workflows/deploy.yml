@@ -1,0 +1,104 @@
+name: Django CI/CD with Poetry
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up environment
+        run: |
+          echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS_LIST }}" >> $GITHUB_ENV
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.3'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - 
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run migrations
+        run: poetry run python manage.py migrate
+        env:
+          DJANGO_ENV: 'test'
+          POSTGRES_DB: 'test_home_work_django_rest_new'
+          POSTGRES_USER: 'postgres'
+          POSTGRES_PASSWORD: 'Meira4232953'
+          POSTGRES_HOST: 'localhost'
+          POSTGRES_PORT: '5432'
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+      - name: Run Django tests
+        run: poetry run python manage.py test
+        env:
+          DJANGO_ENV: 'test'
+          POSTGRES_DB: 'test_home_work_django_rest_new'
+          POSTGRES_USER: 'postgres'
+          POSTGRES_PASSWORD: 'Meira4232953'
+          POSTGRES_HOST: 'localhost'
+          POSTGRES_PORT: '5432'
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Copy project files to server
+        run: |
+          rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
+
+      - name: Install dependencies on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DEPLOY_DIR }}
+            source venv/bin/activate
+            poetry install
+          EOF
+
+      - name: Apply migrations on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DEPLOY_DIR }}
+            source venv/bin/activate
+            poetry run python manage.py migrate
+          EOF
+
+      - name: Collect static files on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DEPLOY_DIR }}
+            source venv/bin/activate
+            poetry run python manage.py collectstatic --noinput
+          EOF
+
+      - name: Restart application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            sudo systemctl restart myapp.service
+          EOF
