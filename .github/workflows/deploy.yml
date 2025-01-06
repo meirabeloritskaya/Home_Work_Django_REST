@@ -36,7 +36,7 @@ jobs:
           POSTGRES_DB: 'test_home_work_django_rest_new'
           POSTGRES_USER: 'postgres'
           POSTGRES_PASSWORD: 'Meira4232953'
-          POSTGRES_HOST: 'localhost'
+          POSTGRES_HOST: 'db'
           POSTGRES_PORT: '5432'
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
@@ -45,7 +45,7 @@ jobs:
         env:
           DJANGO_ENV: 'test'
           POSTGRES_DB: 'test_home_work_django_rest_new'
-          POSTGRES_USER: 'postgres'
+          POSTGRES_USER: 'db'
           POSTGRES_PASSWORD: 'Meira4232953'
           POSTGRES_HOST: 'localhost'
           POSTGRES_PORT: '5432'
