@@ -21,7 +21,7 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "home-work-django-rest.onrender.com"]
+ALLOWED_HOSTS = ["0.0.0.0", "localhost", "home-work-django-rest.onrender.com"]
 
 
 INSTALLED_APPS = [
