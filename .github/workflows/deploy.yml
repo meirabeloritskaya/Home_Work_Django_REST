@@ -33,23 +33,23 @@ jobs:
         run: poetry run python manage.py migrate
         env:
           DJANGO_ENV: 'test'
-          POSTGRES_DB: 'test_home_work_django_rest_new'
-          POSTGRES_USER: 'postgres'
-          POSTGRES_PASSWORD: 'Meira4232953'
-          POSTGRES_HOST: 'db'
-          POSTGRES_PORT: '5432'
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          POSTGRES_DB: 'meira'  # Имя базы данных на Render
+          POSTGRES_USER: 'meira_user'  # Имя пользователя базы данных на Render
+          POSTGRES_PASSWORD: 'tFIolqnKMmGwsAK3jRhGe6XfsBStwTlK'  # Пароль для базы данных
+          POSTGRES_HOST: 'dpg-ctronb3qf0us73di88rg-a'  # Хост для подключения к базе данных на Render
+          POSTGRES_PORT: '5432'  # Порт базы данных
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Секретный ключ Django
 
       - name: Run Django tests
         run: poetry run python manage.py test
         env:
           DJANGO_ENV: 'test'
-          POSTGRES_DB: 'test_home_work_django_rest_new'
-          POSTGRES_USER: 'db'
-          POSTGRES_PASSWORD: 'Meira4232953'
-          POSTGRES_HOST: 'localhost'
-          POSTGRES_PORT: '5432'
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          POSTGRES_DB: 'meira'  # Имя базы данных на Render
+          POSTGRES_USER: 'meira_user'  # Имя пользователя базы данных на Render
+          POSTGRES_PASSWORD: 'tFIolqnKMmGwsAK3jRhGe6XfsBStwTlK'  # Пароль для базы данных
+          POSTGRES_HOST: 'dpg-ctronb3qf0us73di88rg-a'  # Хост для подключения к базе данных на Render
+          POSTGRES_PORT: '5432'  # Порт базы данных
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Секретный ключ Django
 
   deploy-server:
     runs-on: ubuntu-latest
