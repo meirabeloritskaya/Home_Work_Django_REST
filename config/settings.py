@@ -96,6 +96,9 @@ else:  # Локальный режим (Docker)
             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
             "HOST": os.getenv("POSTGRES_HOST"),
             "PORT": os.getenv("POSTGRES_PORT"),
+            "TEST": {
+                "NAME": os.getenv("POSTGRES_TEST_DB", "test_db"),  # Имя тестовой базы данных
+            },
         }
     }
 
