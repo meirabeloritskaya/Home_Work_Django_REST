@@ -31,6 +31,9 @@ jobs:
 
       - name: Run Django tests
         run: poetry run python manage.py test
+        env:
+          DJANGO_ENV: 'test'
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
   build:
     runs-on: ubuntu-latest
