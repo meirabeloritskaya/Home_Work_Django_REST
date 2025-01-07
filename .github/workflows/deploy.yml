@@ -29,31 +29,29 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Run migrations
-        run: poetry run python manage.py migrate
-        env:
-          DJANGO_ENV: 'test'
-          POSTGRES_DB: 'meira'  # Имя базы данных на Render
-          POSTGRES_USER: 'meira_user'  # Имя пользователя базы данных на Render
-          POSTGRES_PASSWORD: 'tFIolqnKMmGwsAK3jRhGe6XfsBStwTlK'  # Пароль для базы данных
-          POSTGRES_HOST: 'dpg-ctronb3qf0us73di88rg-a'  # Хост для подключения к базе данных на Render
-          POSTGRES_PORT: '5432'  # Порт базы данных
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Секретный ключ Django
-
       - name: Run Django tests
         run: poetry run python manage.py test
-        env:
-          DJANGO_ENV: 'test'
-          POSTGRES_DB: 'meira'  # Имя базы данных на Render
-          POSTGRES_USER: 'meira_user'  # Имя пользователя базы данных на Render
-          POSTGRES_PASSWORD: 'tFIolqnKMmGwsAK3jRhGe6XfsBStwTlK'  # Пароль для базы данных
-          POSTGRES_HOST: 'dpg-ctronb3qf0us73di88rg-a'  # Хост для подключения к базе данных на Render
-          POSTGRES_PORT: '5432'  # Порт базы данных
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Секретный ключ Django
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 
   deploy-server:
     runs-on: ubuntu-latest
-    needs: test
+    needs: build
     if: success()
 
     steps:
@@ -65,38 +63,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Copy project files to server
-        run: |
-          rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
-
-      - name: Install dependencies on server
+      - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ${{ secrets.DEPLOY_DIR }}
-            source venv/bin/activate
-            poetry install
-          EOF
-
-      - name: Apply migrations on server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ${{ secrets.DEPLOY_DIR }}
-            source venv/bin/activate
-            poetry run python manage.py migrate
-          EOF
-
-      - name: Collect static files on server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ${{ secrets.DEPLOY_DIR }}
-            source venv/bin/activate
-            poetry run python manage.py collectstatic --noinput
-          EOF
-
-      - name: Restart application
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            sudo systemctl restart myapp.service
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
 
   deploy-render:

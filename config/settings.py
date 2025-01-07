@@ -21,7 +21,12 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "home-work-django-rest.onrender.com"]
+ALLOWED_HOSTS = [
+    "0.0.0.0",
+    "127.0.0.1",
+    "localhost",
+    "home-work-django-rest.onrender.com",
+]
 
 
 INSTALLED_APPS = [
@@ -80,10 +85,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-if os.getenv('DJANGO_ENV') == 'production':  # Продакшн-режим (Render)
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-    }
+if os.getenv("DJANGO_ENV") == "production":  # Продакшн-режим (Render)
+    DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 else:  # Локальный режим (Docker)
     DATABASES = {
         "default": {
@@ -173,4 +176,4 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-ALLOWED_HOSTS = ['home-work-django-rest.onrender.com']
+ALLOWED_HOSTS = ["home-work-django-rest.onrender.com"]
