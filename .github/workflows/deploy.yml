@@ -57,16 +57,21 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose-plugin
+
       - name: Log in to Docker Hub
         run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest .
+          docker compose build
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
+          docker compose push
 
       - name: Deploy to Server
         uses: appleboy/scp-action@master
@@ -76,9 +81,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /path/to/your/project
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d
+            docker compose down
+            docker compose pull
+            docker compose up -d
 
       - name: Deploy to Render
         run: |
