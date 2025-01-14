@@ -36,8 +36,8 @@ jobs:
          sudo service postgresql start
          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'Meira4232953';"
          sudo -u postgres psql -c "CREATE DATABASE Home_Work_Django_REST_NEW;"
-         sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD 'Meira4232953';"
-         sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO postgres;"
+         sudo -u postgres psql -c "CREATE USER django-postgres WITH PASSWORD 'Meira4232953';"
+         sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO django-postgres;"
 
       - name: Check out code
         uses: actions/checkout@v3
