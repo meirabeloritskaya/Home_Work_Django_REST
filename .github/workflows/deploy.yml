@@ -13,14 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_DB: Home_Work_Django_REST_NEW
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Meira4232953
-        ports:
-          - 5432:5432
+#      postgres:
+#       image: postgres
+#        env:
+#          POSTGRES_DB: Home_Work_Django_REST_NEW
+#          POSTGRES_USER: postgres
+#          POSTGRES_PASSWORD: Meira4232953
+#       ports:
+#          - 5432:5432
+
 
       redis:
         image: redis:latest
@@ -28,6 +29,16 @@ jobs:
           - 6379:6379
 
     steps:
+      - name: Set up PostgreSQL
+        run: |
+         sudo apt-get update
+         sudo apt-get install -y postgresql-client
+         sudo service postgresql start
+         sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'Meira4232953';"
+         sudo -u postgres psql -c "CREATE DATABASE Home_Work_Django_REST_NEW;"
+         sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD 'Meira4232953';"
+         sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO postgres;"
+
       - name: Check out code
         uses: actions/checkout@v3
 
