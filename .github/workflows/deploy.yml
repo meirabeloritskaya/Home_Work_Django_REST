@@ -43,6 +43,8 @@ jobs:
 
       - name: Run migrations
         run: |
+          sleep 10  # ожидание запуска PostgreSQL
+          echo "SELECT 1;" | PGPASSWORD=$POSTGRES_PASSWORD psql -U $POSTGRES_USER -h postgres $POSTGRES_DB
           poetry run python manage.py migrate
 
       - name: Run tests
