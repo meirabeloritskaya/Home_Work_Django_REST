@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      db:
        image: postgres
        env:
           POSTGRES_DB: Home_Work_Django_REST_NEW
