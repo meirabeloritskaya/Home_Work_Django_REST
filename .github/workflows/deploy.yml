@@ -66,15 +66,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install docker-compose-plugin
 
-      - name: Set up PostgreSQL
+      - name: Set up PostgreSQ
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
           sudo service postgresql start
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'Meira4232953';"
           sudo -u postgres psql -c "CREATE DATABASE Home_Work_Django_REST_NEW;"
-          sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD 'Meira4232953';"
-          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO postgres;"
+          sudo -u postgres psql -c "CREATE USER django-postgres WITH PASSWORD 'Meira4232953';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO django-postgres;"
 
       - name: Log in to Docker Hub
         run: echo $DOCKER_HUB_ACCESS_TOKEN | docker login --username $DOCKER_HUB_USERNAME --password-stdin
