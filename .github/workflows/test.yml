@@ -1,4 +1,3 @@
-
 name: Django CI
 
 on: [push, pull_request]
@@ -8,30 +7,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-      - uses: actions/checkout@v3
+        - name: Checkout code
 
-      - name: Set up Python
-      - uses: actions/setup-python@v3
-        with:
-          python-version: '3.12'
+          uses: actions/checkout@v3
+
+        - name: Set up Python
+          uses: actions/setup-python@v3
+          with:
+            python-version: '3.12'
 
 
-      - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install
-      - name: Set up PostgreSQL
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
-          sudo service postgresql start
-          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'Meira4232953';"
-          sudo -u postgres psql -c "CREATE DATABASE Home_Work_Django_REST_NEW;"
-          sudo -u postgres psql -c "CREATE ROLE runner WITH LOGIN PASSWORD 'Meira4232953';"
-          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO runner;"
-          sudo -u postgres psql -c "GRANT CREATE ON SCHEMA public TO runner;"
-          echo "DATABASE_URL=postgres://runner:Meira4232953@localhost/Home_Work_Django_REST_NEW" >> $GITHUB_ENV
+        - name: Install dependencies
+          run: |
+            pip install poetry
+            poetry install
+        - name: Set up PostgreSQL
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y postgresql-client
+            sudo service postgresql start
+            sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'Meira4232953';"
+            sudo -u postgres psql -c "CREATE DATABASE Home_Work_Django_REST_NEW;"
+            sudo -u postgres psql -c "CREATE ROLE runner WITH LOGIN PASSWORD 'Meira4232953';"
+            sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE Home_Work_Django_REST_NEW TO runner;"
+            sudo -u postgres psql -c "GRANT CREATE ON SCHEMA public TO runner;"
+            echo "DATABASE_URL=postgres://runner:Meira4232953@localhost/Home_Work_Django_REST_NEW" >> $GITHUB_ENV
 
   build-and-deploy:
     runs-on: ubuntu-latest
