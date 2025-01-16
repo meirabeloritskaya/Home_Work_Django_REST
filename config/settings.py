@@ -85,24 +85,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-# if os.getenv("DJANGO_ENV") == "production":  # Продакшн-режим (Render)
-#     DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
-# else:  # Локальный режим (Docker)
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql_psycopg2",
-#             "NAME": 'postgres',
-#             "USER": "postgres",
-#             "PASSWORD": "postgres",
-#             "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-#             "PORT": os.getenv("POSTGRES_PORT"),
-#             "TEST": {
-#                 "NAME": os.getenv("POSTGRES_TEST_DB", "test_db"),  # Имя тестовой базы данных
-#             },
-#         }
-#     }
-
-DATABASES = {
+if os.getenv("DJANGO_ENV") == "production":  # Продакшн-режим (Render)
+    DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+else:  # Локальный режим (Docker)
+    DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": 'postgres',
@@ -115,6 +101,20 @@ DATABASES = {
             },
         }
     }
+#
+# DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql_psycopg2",
+#             "NAME": 'postgres',
+#             "USER": "postgres",
+#             "PASSWORD": "postgres",
+#             "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+#             "PORT": os.getenv("POSTGRES_PORT"),
+#             "TEST": {
+#                 "NAME": os.getenv("POSTGRES_TEST_DB", "test_db"),  # Имя тестовой базы данных
+#             },
+#         }
+#     }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
