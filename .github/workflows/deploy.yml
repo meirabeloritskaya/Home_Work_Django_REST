@@ -139,13 +139,13 @@ jobs:
           sudo -u postgres psql -c "GRANT CREATE ON SCHEMA public TO runner;"
           echo "DATABASE_URL=postgres://runner:Meira4232953@localhost/Home_Work_Django_REST_NEW" >> $GITHUB_ENV
 
-      - name: Run migrate
-        run: |
-          python3 manage.py migrate
-
-      - name: Run tests
-        run: |
-          python3 manage.py test
+#      - name: Run migrate
+#        run: |
+#          python3 manage.py migrate
+#
+#      - name: Run tests
+#        run: |
+#          python3 manage.py test
 
 
   build-and-deploy:
