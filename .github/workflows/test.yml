@@ -42,11 +42,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Docker Compose
-        run: |         
-           DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-           mkdir -p $DOCKER_CONFIG/cli-plugins
-           curl -SL https://github.com/docker/compose/releases/download/v2.32.4/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-
+        run: |
+          DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+          mkdir -p $DOCKER_CONFIG/cli-plugins
+          curl -SL https://github.com/docker/compose/releases/download/v2.32.4/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
 
       - name: Log in to Docker Hub
         run: echo $DOCKER_HUB_ACCESS_TOKEN | docker login --username $DOCKER_HUB_USERNAME --password-stdin
@@ -58,18 +57,6 @@ jobs:
       - name: Push Docker Image
         run: |
           docker compose push
-
-      - name: Deploy to Server
-        uses: appleboy/scp-action@master
-        with:
-          host: $SERVER_HOST
-          username: $SERVER_USER
-          key: $SSH_PRIVATE_KEY
-          script: |
-            cd /path/to/your/project
-            docker compose down
-            docker compose pull
-            docker compose up -d
 
       - name: Deploy to Render
         run: |
