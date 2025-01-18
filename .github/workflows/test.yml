@@ -49,7 +49,7 @@ jobs:
 
       - name: Log in to Docker Hub
         shell: bash
-        run: echo dckr_pat_3r8K-92UNIJJgz0FVKs76oe8Lc | docker login --username meira13 --password-stdin --server https://index.docker.io/v1/
+        run: echo "dckr_pat_3r8K-92UNIJJgz0FVKs76oe8Lc" | docker login --username "meira13" --password-stdin --server https://index.docker.io/v1/
 
       - name: Build Docker Image
         run: |
