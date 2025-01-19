@@ -75,3 +75,5 @@ jobs:
           echo "### Deploying to Render ###"
           curl -X POST $RENDER_DEPLOY_HOOK
           echo "### Deployment to Render triggered ###"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
