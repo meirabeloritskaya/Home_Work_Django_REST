@@ -21,6 +21,10 @@ jobs:
           run: |
             pip install poetry
             poetry install
+
+        - name: Set DJANGO_ENV for Testing
+          run: echo "DJANGO_ENV=development" >> $GITHUB_ENV
+
         - name: Set up PostgreSQL
           run: |
             sudo apt-get update
@@ -40,6 +44,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Set DJANGO_ENV for Production
+        run: echo "DJANGO_ENV=production" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         shell: bash
