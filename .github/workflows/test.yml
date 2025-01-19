@@ -50,16 +50,25 @@ jobs:
 
       - name: Log in to Docker Hub
         shell: bash
-        run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login --username "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        run: |
+          echo "### Logging into Docker Hub ###"
+          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login --username "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+          echo "### Logged into Docker Hub successfully ###"
 
       - name: Build Docker Image
-        run: docker compose build
+        run: |
+          echo "### Starting Docker Compose build ###"
+          docker compose build
+          echo "### Docker Compose build completed ###"
 
       - name: Push Docker Image
-        run: docker compose push
-
-      
+        run: |
+          echo "### Starting Docker Compose push ###"
+          docker compose push
+          echo "### Docker Compose push completed ###"
 
       - name: Deploy to Render
         run: |
+          echo "### Deploying to Render ###"
           curl -X POST $RENDER_DEPLOY_HOOK
+          echo "### Deployment to Render triggered ###"
