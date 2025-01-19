@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from django.http import HttpResponse
 
 from materials.filters import CourseFilter, LessonFilter
 from materials.models import Course, Lesson, Subscription
@@ -172,3 +173,6 @@ class UserSubscriptionsView(generics.ListAPIView):
     def get_queryset(self):
         # Получаем подписки только для текущего пользователя
         return Subscription.objects.filter(user=self.request.user)
+
+def home(request):
+    return HttpResponse("Welcome to the Materials Application!")
