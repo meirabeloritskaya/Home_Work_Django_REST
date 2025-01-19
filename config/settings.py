@@ -101,20 +101,7 @@ else:  # Локальный режим (Docker)
             },
         }
     }
-#
-# DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql_psycopg2",
-#             "NAME": 'postgres',
-#             "USER": "postgres",
-#             "PASSWORD": "postgres",
-#             "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-#             "PORT": os.getenv("POSTGRES_PORT"),
-#             "TEST": {
-#                 "NAME": os.getenv("POSTGRES_TEST_DB", "test_db"),  # Имя тестовой базы данных
-#             },
-#         }
-#     }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
