@@ -54,11 +54,12 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker-compose build
+          "C:/Program Files/Docker/Docker/resources/bin/docker-compose.exe" build
 
       - name: Push Docker Image
         run: |
-          docker-compose push
+          "C:/Program Files/Docker/Docker/resources/bin/docker-compose.exe" push
+      
 
       - name: Deploy to Render
         run: |
