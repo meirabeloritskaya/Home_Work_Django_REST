@@ -181,3 +181,4 @@ SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ALLOWED_HOSTS = ["home-work-django-rest.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://home-work-django-rest.onrender.com"]
