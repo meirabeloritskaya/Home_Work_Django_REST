@@ -54,11 +54,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker compose build
+          docker-compose build
 
       - name: Push Docker Image
         run: |
-          docker compose push
+          docker-compose push
 
       - name: Deploy to Render
         run: |
